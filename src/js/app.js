@@ -8,6 +8,10 @@ let axisValues = ['curb-weight', 'highway-mpg']
 // TODO: Fix colors wrapping around.
 // TODO: Add filters
 // TODO: Toggle legend to view multiple "types" at once
+// TODO: Add toggle for lenses.
+// TODO: Add magnifying glass lens.
+// TODO: Allow for two circles to be selected.
+// TODO: Display two selected circles in a new graph structure.
 
 let parsedCSVData = csv.csvParse(carData.data)
 let data = parsedCSVData

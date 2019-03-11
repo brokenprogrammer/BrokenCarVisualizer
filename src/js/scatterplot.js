@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import * as fisheyeLens from 'd3-plugins-dist/dist/mbostock/fisheye/es6/index.js'
 
 export class ScatterPlot {
   constructor (location, data, axes) {
@@ -8,10 +9,18 @@ export class ScatterPlot {
 
     let svg = d3.select('#draw')
       .append('svg')
+      .attr('class', 'svg_main')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
+      .attr('class', 'g_main')
+      .style('pointer-events', 'all')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+    svg.append('rect')
+      .attr('class', 'background')
+      .attr('width', width)
+      .attr('height', height)
 
     let xScale = d3.scaleLinear().range([0, width])
     let yScale = d3.scaleLinear().range([height, 0])
@@ -64,6 +73,9 @@ export class ScatterPlot {
       .attr('cy', function (d) { return yScale(parseFloat(d[axes[1]])) })
       .attr('r', function (d) { return radius(parseInt(Math.abs(d['risk-factor'])) * 2) })
       .style('fill', function (d) { return color(d.make) })
+      .on('click', function (d) {
+        console.log(d)
+      })
 
     bubble.append('title')
       .attr('x', function (d) { return radius(parseInt(Math.abs(d['risk-factor'])) * 2) })
@@ -112,6 +124,25 @@ export class ScatterPlot {
           return d.make === type
         })
         .style('opacity', 1)
+    })
+
+    let fisheye = fisheyeLens.default.circular()
+      .radius(80)
+      .distortion(2)
+
+    console.log(fisheye)
+
+    svg.on('mousemove', function () {
+      fisheye.focus(d3.mouse(this))
+
+      bubble.each(function (d) {
+        d.x = xScale(parseFloat(d[axes[0]]))
+        d.y = yScale(parseFloat(d[axes[1]]))
+        d.fisheye = fisheye(d)
+        // console.log(d.fisheye)
+      })
+        .attr('cx', function (d) { return d.fisheye.x })
+        .attr('cy', function (d) { return d.fisheye.y })
     })
   }
 }
