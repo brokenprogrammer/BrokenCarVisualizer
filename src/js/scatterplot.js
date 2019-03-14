@@ -30,7 +30,8 @@ export class ScatterPlot {
     let xAxis = d3.axisBottom().scale(xScale)
     let yAxis = d3.axisLeft().scale(yScale)
 
-    let color = d3.scaleOrdinal(d3.schemeCategory20)
+    let color = d3.scaleOrdinal()
+      .range(['#5DA5B3', '#D58323', '#DD6CA7', '#54AF52', '#8C92E8', '#E15E5A', '#725D82', '#776327', '#50AB84', '#954D56', '#AB9C27', '#517C3F', '#9D5130', '#357468', '#5E9ACF', '#C47DCB', '#7D9E33', '#DB7F85', '#BA89AD', '#4C6C86', '#B59248', '#D8597D', '#944F7E', '#D67D4B', '#8F86C2'])
 
     data.forEach(function (d) {
       d.price = +d.price
@@ -74,16 +75,16 @@ export class ScatterPlot {
       .attr('r', function (d) { return radius(parseInt(Math.abs(d['risk-factor'])) * 2) })
       .style('fill', function (d) { return color(d.make) })
       .on('click', function (d) {
-        console.log(d)
-        console.log(this)
-
+        d.color = color(d.make)
+        let selected = true
         if (!this.classList.contains('selected')) {
           this.classList.add('selected')
         } else {
           this.classList.remove('selected')
+          selected = false
         }
 
-        bubbleSelectionListener(d)
+        bubbleSelectionListener(d, selected)
       })
 
     bubble.append('title')

@@ -51,19 +51,43 @@ export class ParaCoords {
           })
       },
       {
-        key: 'risk-factor',
-        type: types['Number'],
-        scale: d3.scaleSqrt().range([innerHeight, 0])
-      },
-      {
-        key: 'length',
-        type: types['Number'],
-        scale: d3.scaleSqrt().range([innerHeight, 0])
+        key: 'drive-wheels',
+        type: types['String'],
+        axis: d3.axisLeft()
+          .tickFormat(function (d, i) {
+            return d
+          })
       },
       {
         key: 'horsepower',
         type: types['Number'],
         scale: d3.scaleSqrt().range([innerHeight, 0])
+      },
+      {
+        key: 'num-of-doors',
+        type: types['String'],
+        axis: d3.axisLeft()
+          .tickFormat(function (d, i) {
+            return d
+          })
+      },
+      // {
+      //   key: 'risk-factor',
+      //   type: types['Number'],
+      //   scale: d3.scaleSqrt().range([innerHeight, 0])
+      // },
+      {
+        key: 'price',
+        type: types['Number'],
+        scale: d3.scaleSqrt().range([innerHeight, 0])
+      },
+      {
+        key: 'fuel-type',
+        type: types['String'],
+        axis: d3.axisLeft()
+          .tickFormat(function (d, i) {
+            return d
+          })
       }
     ]
 
@@ -117,7 +141,7 @@ export class ParaCoords {
 
     data.forEach(function (d) {
       dimensions.forEach(function (p) {
-        d[p.key] = !d[p.key] ? null : p.type.coerce(d[p.key])
+        d[p.key] = p.type.coerce(d[p.key])
       })
 
       // truncate long text strings to fit in data table
@@ -174,14 +198,18 @@ export class ParaCoords {
       .attr('width', 16)
 
     d3.selectAll('.axis.make .tick text')
-      .style('fill', this.color)
+      .style('fill', function (d) {
+        for (let i = 0; i < data.length; ++i) {
+          if (data[i].make === d) {
+            return data[i].color
+          }
+        }
+      })
 
     output.text(d3.tsvFormat(data.slice(0, 24)))
   }
 
   brush () {
-    console.log('BRUSH')
-    console.log(this)
     let render = this.render
     let svg = this.svg
     let ctx = this.ctx
@@ -253,7 +281,7 @@ function brushstart () {
 
 function draw (d) {
   let ctx = this.ctx
-  ctx.strokeStyle = this.color(d.make)
+  ctx.strokeStyle = d.color
   ctx.beginPath()
   var coords = project.bind(this)(d)
   coords.forEach(function (p, i) {
@@ -291,10 +319,9 @@ function project (d) {
   let x = this.xscale
   return this.dimensions.map(function (p, i) {
     // check if data element has property and contains a value
-    if (
-      !(p.key in d) ||
-          d[p.key] === null
-    ) return null
+    if (!(p.key in d) || d[p.key] === null) {
+      return null
+    }
 
     return [x(i), p.scale(d[p.key])]
   })

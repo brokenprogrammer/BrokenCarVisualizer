@@ -6,12 +6,6 @@ import * as paracoords from './paralellcoordinates.js'
 let axisValues = ['curb-weight', 'highway-mpg']
 let selectedData = []
 
-// TODO: Fix colors wrapping around.
-// TODO: fix null or missing values csv through d3.
-// TODO: Match scatter plot colors with paralellcoordiantes colors.
-// TODO: Remove unused npm modules
-// TODO: Choose what data to display in the parralell coordinate system.
-
 let parsedCSVData = csv.csvParse(carData.data)
 let data = parsedCSVData
 
@@ -54,21 +48,24 @@ function registerAxisSelectionListeners () {
   xAxisSelection.addEventListener('change', function () {
     axisValues[0] = this.value
     window.document.querySelector('#draw').innerHTML = ``
-    plot = new ScatterPlot('#draw', data, axisValues)
+    plot = new ScatterPlot('#draw', data, axisValues, bubbleSelectionListener)
   })
 
   yAxisSelection.addEventListener('change', function () {
     axisValues[1] = this.value
     window.document.querySelector('#draw').innerHTML = ``
-    plot = new ScatterPlot('#draw', data, axisValues)
+    plot = new ScatterPlot('#draw', data, axisValues, bubbleSelectionListener)
   })
 }
 
-function bubbleSelectionListener (data) {
-  console.log('selected' + data)
-
+function bubbleSelectionListener (data, selected) {
   // TODO: push if doesnt exist else remove it off the selected Data, could be done through boolean value passed as 2nd argument.
-  selectedData.push(data)
+  if (selected) {
+    selectedData.push(data)
+  } else {
+    let index = selectedData.indexOf(data)
+    selectedData.splice(index, 1)
+  }
 
   window.document.querySelector('.parcoords').remove()
   window.document.querySelector('pre').remove()
