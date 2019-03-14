@@ -1,38 +1,24 @@
 import * as csv from 'd3-dsv'
 import * as carData from './cardata.js'
 import { ScatterPlot } from './scatterplot.js'
-import * as noUiSlider from 'nouislider'
+import * as paracoords from './paralellcoordinates.js'
 
 let axisValues = ['curb-weight', 'highway-mpg']
+let selectedData = []
 
 // TODO: Fix colors wrapping around.
-// TODO: Add filters
-// TODO: Toggle legend to view multiple "types" at once
-// TODO: Add toggle for lenses.
-// TODO: Add magnifying glass lens.
-// TODO: Allow for two circles to be selected.
-// TODO: Display two selected circles in a new graph structure.
+// TODO: fix null or missing values csv through d3.
+// TODO: Match scatter plot colors with paralellcoordiantes colors.
+// TODO: Remove unused npm modules
+// TODO: Choose what data to display in the parralell coordinate system.
 
 let parsedCSVData = csv.csvParse(carData.data)
 let data = parsedCSVData
 
-let plot = new ScatterPlot('#draw', data, axisValues)
+let plot = new ScatterPlot('#draw', data, axisValues, bubbleSelectionListener)
 
-var slider = document.getElementById('slider')
+let par = new paracoords.ParaCoords('', selectedData)
 
-noUiSlider.create(slider, {
-  start: [20, 80],
-  connect: true,
-  tooltips: true,
-  range: {
-    'min': 0,
-    'max': 100
-  },
-  pips: {
-    mode: 'range',
-    density: 3
-  }
-})
 function populateAxisSelection () {
   let xAxisSelection = window.document.querySelector('#xaxis-values')
   let yAxisSelection = window.document.querySelector('#yaxis-values')
@@ -76,6 +62,17 @@ function registerAxisSelectionListeners () {
     window.document.querySelector('#draw').innerHTML = ``
     plot = new ScatterPlot('#draw', data, axisValues)
   })
+}
+
+function bubbleSelectionListener (data) {
+  console.log('selected' + data)
+
+  // TODO: push if doesnt exist else remove it off the selected Data, could be done through boolean value passed as 2nd argument.
+  selectedData.push(data)
+
+  window.document.querySelector('.parcoords').remove()
+  window.document.querySelector('pre').remove()
+  par = new paracoords.ParaCoords('', selectedData)
 }
 
 populateAxisSelection()

@@ -5,7 +5,32 @@
   fill: none;
   pointer-events: all;
 }
+.parcoords {
+  display: block;
+}
 
+.parcoords svg,
+.parcoords canvas {
+  font: 10px sans-serif;
+  position: absolute;
+}
+
+.parcoords canvas {
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.axis .title {
+  font-size: 10px;
+  transform: rotate(-21deg) translate(-5px,-6px);
+  fill: #222;
+}
+
+.brush .extent {
+  fill-opacity: .3;
+  stroke: #fff;
+  stroke-width: 1px;
+}
 .svg_main {
   cursor:pointer;
   pointer-events: all;
@@ -20,66 +45,6 @@
   padding-top: 50px;
   width: 500px;
 }
-
-.noUi-background {
-  height: 16px;
-}
-.noUi-background.noUi-vertical {
-  height: 200px;
-  width: 16px;
-  margin: 0 auto 30px;
-}
-
-.noUi-base .noUi-connect {
-  background-color: #462969;
-}
-.noUi-base .noUi-handle {
-  background-color: #5e378e;
-  border: none;
-  border-radius: 6px;
-  box-shadow: none;
-  color: #ffffff;
-  display: table;
-  font-size: 15px;
-  height: 20px;
-  left: 0;
-  margin-left: -22px;
-  margin-top: -3px;
-  padding: 0;
-  position: absolute;
-  text-align: center;
-  top: 0;
-  width: 40px;
-  z-index: 2;
-}
-.noUi-horizontal .noUi-base .noUi-handle {
-  cursor: ew-resize;
-}
-.noUi-vertical .noUi-base .noUi-handle {
-  cursor: ns-resize;
-  margin-left: -12px;
-}
-.noUi-base .noUi-handle:hover {
-  background-color: #7645b3;
-}
-.noUi-base .noUi-handle.noUi-active {
-  background-color: #462969;
-  z-index: 3;
-}
-.noUi-base .noUi-handle::before {
-  background: transparent;
-  content: attr(data-value);
-  display: table-cell;
-  font-size: 14px;
-  font-weight: 100;
-  position: static;
-  width: 100%;
-  vertical-align: middle;
-}
-.noUi-base .noUi-handle::after {
-  display: none;
-}
-
 
 .node circle {
     fill: #fff;
@@ -96,3 +61,9 @@
     stroke: #ccc;
     stroke-width: 2px;
   }
+
+circle.bubble.selected {
+  border: 2px #ccc solid;
+  stroke: #000;
+  stroke-width: 2px;
+}

@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 import * as fisheyeLens from 'd3-plugins-dist/dist/mbostock/fisheye/es6/index.js'
 
 export class ScatterPlot {
-  constructor (location, data, axes) {
+  constructor (location, data, axes, bubbleSelectionListener) {
     let margin = { top: 30, right: 50, bottom: 40, left: 40 }
     let width = 960 - margin.left - margin.right
     let height = 500 - margin.top - margin.bottom
@@ -75,6 +75,15 @@ export class ScatterPlot {
       .style('fill', function (d) { return color(d.make) })
       .on('click', function (d) {
         console.log(d)
+        console.log(this)
+
+        if (!this.classList.contains('selected')) {
+          this.classList.add('selected')
+        } else {
+          this.classList.remove('selected')
+        }
+
+        bubbleSelectionListener(d)
       })
 
     bubble.append('title')
@@ -85,14 +94,14 @@ export class ScatterPlot {
 
     // Axis labels
     svg.append('text')
-      .attr('x', 10)
-      .attr('y', 10)
+      .attr('x', width - 60)
+      .attr('y', height - 10)
       .attr('class', 'label')
       .text(axes[0])
 
     svg.append('text')
-      .attr('x', width - 60)
-      .attr('y', height - 10)
+      .attr('x', 10)
+      .attr('y', 10)
       .attr('class', 'label')
       .text(axes[1])
 
