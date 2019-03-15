@@ -63,9 +63,6 @@ export class ScatterPlot {
       .attr('class', 'y axis')
       .call(yAxis)
 
-    console.log(xScale(1))
-    console.log(yScale(2))
-
     let bubble = svg.selectAll('.bubble')
       .data(data)
       .enter().append('circle')
@@ -140,8 +137,6 @@ export class ScatterPlot {
       .radius(80)
       .distortion(2)
 
-    console.log(fisheye)
-
     svg.on('mousemove', function () {
       fisheye.focus(d3.mouse(this))
 
@@ -149,7 +144,6 @@ export class ScatterPlot {
         d.x = xScale(parseFloat(d[axes[0]]))
         d.y = yScale(parseFloat(d[axes[1]]))
         d.fisheye = fisheye(d)
-        // console.log(d.fisheye)
       })
         .attr('cx', function (d) { return d.fisheye.x })
         .attr('cy', function (d) { return d.fisheye.y })

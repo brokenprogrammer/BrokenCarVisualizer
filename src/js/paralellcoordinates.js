@@ -128,9 +128,6 @@ export class ParaCoords {
     this.ctx.lineWidth = 1.5
     this.ctx.scale(devicePixelRatio, devicePixelRatio)
 
-    var output = d3.select('body').append('pre')
-    this.output = output
-
     var axes = svg.selectAll('.axis')
       .data(this.dimensions)
       .enter().append('g')
@@ -205,15 +202,12 @@ export class ParaCoords {
           }
         }
       })
-
-    output.text(d3.tsvFormat(data.slice(0, 24)))
   }
 
   brush () {
     let render = this.render
     let svg = this.svg
     let ctx = this.ctx
-    let output = this.output
 
     render.invalidate()
 
@@ -270,8 +264,6 @@ export class ParaCoords {
     ctx.clearRect(0, 0, this.width, this.height)
     ctx.globalAlpha = d3.min([0.85 / Math.pow(selected.length, 0.3), 1])
     render(selected)
-
-    output.text(d3.tsvFormat(selected.slice(0, 24)))
   }
 }
 

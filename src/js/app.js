@@ -6,7 +6,67 @@ import * as paracoords from './paralellcoordinates.js'
 let axisValues = ['curb-weight', 'highway-mpg']
 let selectedData = []
 
-let parsedCSVData = csv.csvParse(carData.data)
+let parsedCSVData = csv.csvParse(carData.data, function (d) {
+  if (d.price.includes('?')) {
+    d.price = 0
+  } else {
+    d.price = +d.price
+  }
+
+  if (d.horsepower.includes('?')) {
+    d.horsepower = 0
+  } else {
+    d.horsepower = +d.horsepower
+  }
+
+  d.bore = +d.bore
+  d.stroke = +d.stroke
+
+  if (d['peak-rpm'].includes('?')) {
+    d['peak-rpm'] = 0
+  } else {
+    d['peak-rpm'] = +d['peak-rpm']
+  }
+
+  if (d['normalized-losses'].includes('?')) {
+    d['normalized-losses'] = 0
+  } else {
+    d['normalized-losses'] = +d['normalized-losses']
+  }
+
+  if (d['num-of-doors'].includes('?')) {
+    d['num-of-doors'] = 'Missing Data'
+  }
+
+  return {
+    price: d.price,
+    'risk-factor': d['risk-factor'],
+    'normalized-losses': d['normalized-losses'],
+    make: d.make,
+    'fuel-type': d['fuel-type'],
+    aspiration: d.aspiration,
+    'num-of-doors': d['num-of-doors'],
+    'body-style': d['body-style'],
+    'drive-wheels': d['drive-wheels'],
+    'engine-location': d['engine-location'],
+    'wheel-base': +d['wheel-base'],
+    length: +d.length,
+    width: +d.width,
+    height: +d.height,
+    'curb-weight': +d['curb-weight'],
+    'engine-type': d['engine-type'],
+    'num-of-cylinders': d['num-of-cylinders'],
+    'engine-size': +d['engine-size'],
+    'fuel-system': d['fuel-system'],
+    bore: +d.bore,
+    stroke: +d.stroke,
+    'compression-ratio': +d['compression-ratio'],
+    horsepower: d.horsepower,
+    'peak-rpm': +d['peak-rpm'],
+    'city-mpg': +d['city-mpg'],
+    'highway-mpg': +d['highway-mpg']
+  }
+})
 let data = parsedCSVData
 
 let plot = new ScatterPlot('#draw', data, axisValues, bubbleSelectionListener)
@@ -59,7 +119,6 @@ function registerAxisSelectionListeners () {
 }
 
 function bubbleSelectionListener (data, selected) {
-  // TODO: push if doesnt exist else remove it off the selected Data, could be done through boolean value passed as 2nd argument.
   if (selected) {
     selectedData.push(data)
   } else {
@@ -68,7 +127,6 @@ function bubbleSelectionListener (data, selected) {
   }
 
   window.document.querySelector('.parcoords').remove()
-  window.document.querySelector('pre').remove()
   par = new paracoords.ParaCoords('', selectedData)
 }
 
